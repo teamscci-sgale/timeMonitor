@@ -1,0 +1,49 @@
+const fs = require('fs');
+const mailer = require('./mailer');
+
+emailSupervisor = () => {
+    const dataBuffer = fs.readFileSync('data.json');
+    const data = JSON.parse(dataBuffer.toString());
+    const id = [];
+    const supervisors = [];
+    const teams = [];
+
+    // Pushes only ReportsToID on id[]
+    // Push ReportsToID, ReportsToName, and ReportsToEmail on supervisors[]
+    data.forEach(({ ReportsToID, ReportsToName, ReportsToEmail }) => {
+        if (id.indexOf(ReportsToID) === -1) {
+            id.push(ReportsToID);
+            supervisors.push({ ReportsToID, ReportsToName, ReportsToEmail });
+        }
+    });
+
+    // Filters for unique values in the supervisors[]
+    supervisors.forEach(({ ReportsToID }) => {
+        if (id.indexOf(ReportsToID) === -1) { return true; }
+        return false;
+    });
+
+    // Groups team members by supervisor and pushes both on teams[]
+    supervisors.forEach((supervisor) => {
+        const members = []
+
+        data.filter((employee) => { 
+            if (employee.ReportsToID === supervisor.ReportsToID) {
+                members.push(employee.EmployeeName);
+            }
+        });
+
+        teams.push({
+            EmployeeName: supervisor.ReportsToName,
+            Email: supervisor.ReportsToEmail,
+            TeamMembers: members
+        });
+    });
+
+    // Data is saved to teams.json specific to the time zone passed in, then  
+    // the supervisor type is passed to sendEmail() 
+    fs.writeFileSync('./teams.json', JSON.stringify(teams));
+    mailer.sendEmail('supervisor', 'teams.json');
+}
+
+module.exports = { emailSupervisor: emailSupervisor }

@@ -1,11 +1,15 @@
 const request = require('request');
+const fs = require('fs');
+const mailer = require('./mailer');
 const decoder = require('./decoder');
+
 // Get employees with zero hours for previous workday
 const getData = (query, callback) => {
     request({ url: decoder.url + query, json: true }, (error, { body }) => {
         callback(undefined, body.value.filter((result) => result.YesterdaysHours === '0.00'));
     });
 }
+
 // Reorder first and last name and remove comma, middle initial, and exempt employees
 const filterData = (data, callback) => {
     const exempt = ["100001","100004","100104","101167","100775","101246","100770","100172","101297"];
@@ -18,4 +22,26 @@ const filterData = (data, callback) => {
         return false;
     }));
 }
-module.exports = { getData: getData, filterData: filterData, supervisorData: supervisorData }
+
+// Data is saved to data.json specific to the time zone passed in, then the type--employee 
+// or supervisor--is passed to sendEmail() 
+const prepData = (data, timeZone, type, file) => {
+    fs.writeFileSync('./data.json', JSON.stringify(data.filter((employee) => employee.Calendar === timeZone)));
+    mailer.sendEmail(type, file);
+}
+
+// Strictly for retrieving data regardless of time zone
+const testData = (query) => {
+    getData(query, (error, data) => {
+        filterData(data, (error, data) => {
+            fs.writeFileSync('./testData.json', JSON.stringify(data));
+        });
+    });
+}
+
+module.exports = { 
+    getData: getData, 
+    filterData: filterData, 
+    prepData: prepData, 
+    testData: testData
+}
