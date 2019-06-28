@@ -1,5 +1,4 @@
 const helpers = require('./helpers');
-const supervisors = require('./supervisors');
 
 const numDay = new Date().getDay();
 
@@ -11,24 +10,23 @@ if (numDay === 1) { query = 'TimeCardMonitoring3' }
 if (numDay > 0 || numDay < 6) {
     helpers.getData(query, (error, data) => {
         helpers.filterData(data, (error, data) => {
-
             // Based on the hour--currently running in CST--with a target of 10AM 
             // in each time zone:  data, time zone, and type are passed to prepData()
             switch (new Date().getHours()) {
-                case 9: 
-                        helpers.prepData(data, 'EST', 'employee', 'data.json');
+                case 15: 
+                    timeZone = 'EST';
                         break;
                 case 10:
-                        helpers.prepData(data, 'CST', 'employee', 'data.json');
+                    timeZone = 'CST';
                         break;
                 case 11:
-                        helpers.prepData(data, 'MST', 'employee', 'data.json');
+                    timeZone = 'MST';
                         break;
                 case 12:
-                        helpers.prepData(data, 'PST', 'employee', 'data.json');
+                    timeZone = 'PST';
                         break;
             }
-            supervisors.emailSupervisor();
+            helpers.prepData(data, timeZone);
         });
     });
     

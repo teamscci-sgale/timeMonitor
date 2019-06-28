@@ -1,36 +1,27 @@
 const fs = require('fs');
 const mailer = require('./mailer');
 
-emailSupervisor = () => {
+const emailSupervisor = () => {
     const dataBuffer = fs.readFileSync('data.json');
     const data = JSON.parse(dataBuffer.toString());
-    const id = [];
-    const supervisors = [];
-    const teams = [];
+
+    const id = [], supervisors = [], teams = [];
 
     // Pushes only ReportsToID on id[]
     // Push ReportsToID, ReportsToName, and ReportsToEmail on supervisors[]
     data.forEach(({ ReportsToID, ReportsToName, ReportsToEmail }) => {
         if (id.indexOf(ReportsToID) === -1) {
             id.push(ReportsToID);
-            supervisors.push({ ReportsToID, ReportsToName, ReportsToEmail });
+            supervisors.push({ supervisor: { ReportsToID, ReportsToName, ReportsToEmail } });
         }
     });
-
-    // Filters for unique values in the supervisors[]
-    supervisors.forEach(({ ReportsToID }) => {
-        if (id.indexOf(ReportsToID) === -1) { return true; }
-        return false;
-    });
-
+    
     // Groups team members by supervisor and pushes both on teams[]
-    supervisors.forEach((supervisor) => {
-        const members = []
+    supervisors.forEach(({ supervisor }) => {
+        const members = [];
 
         data.filter((employee) => { 
-            if (employee.ReportsToID === supervisor.ReportsToID) {
-                members.push(employee.EmployeeName);
-            }
+            if (employee.ReportsToID === supervisor.ReportsToID) { members.push(employee.EmployeeName); }
         });
 
         teams.push({

@@ -28,9 +28,9 @@ const sendEmail = (type, file) => {
         const message = {
             from: decoder.from,
             // to: employee.Email,
-            to: 'fmd-admin@teamscci.com',
-            // to: decoder.sonny, // Remove after testing is complete
-            bcc: decoder.bcc, // Remove after testing is complete
+            // to: 'fmd-admin@teamscci.com',
+            to: decoder.sonny, // Remove after testing is complete
+            // bcc: decoder.bcc, // Remove after testing is complete
             subject,
             html,
             priority: 'high',
