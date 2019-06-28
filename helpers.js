@@ -1,8 +1,8 @@
 const request = require('request');
 const decoder = require('./decoder');
 // Get employees with zero hours for previous workday
-const getData = (callback) => {
-    request({ url: decoder.url, json: true }, (error, { body }) => {
+const getData = (query, callback) => {
+    request({ url: decoder.url + query, json: true }, (error, { body }) => {
         callback(undefined, body.value.filter((result) => result.YesterdaysHours === '0.00'));
     });
 }
@@ -12,9 +12,10 @@ const filterData = (data, callback) => {
     
     callback(undefined, data.filter((employee) => {
         employee.EmployeeName = ((employee.EmployeeName).split(', ')[1]).split(' ')[0] + ' ' + (employee.EmployeeName).split(', ')[0];
+        employee.ReportsToName = ((employee.ReportsToName).split(', ')[1]).split(' ')[0] + ' ' + (employee.ReportsToName).split(', ')[0];
 
         if (exempt.indexOf(employee.EmployeeID) === -1) { return true }
         return false;
     }));
 }
-module.exports = { getData: getData, filterData: filterData }
+module.exports = { getData: getData, filterData: filterData, supervisorData: supervisorData }

@@ -19,9 +19,12 @@ const sendEmail = () => {
         const message = {
             from: decoder.from,
             to: employee.Email,
+            to: decoder.sonny, // Remove after testing is complete
+            // bcc: decoder.bcc, // Remove after testing is complete
             subject: 'REMINDER: Update your time sheet no later than 10AM today',
             html: '<style>p {font-family: tahoma; font-size: 13px; width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0;}</style><p>' + employee.EmployeeName + ',</p><br><p>SCCI policy is to have daily time sheets updated by the end of each work day and no later than 10AM local time the following day.</p><br><p>For further information and exceptions to the policy see Policy #E-501, Employee Weekly Time Sheet, from the Employee Handbook or the JAMIS Prime ERP Time Card & Time Off Guidelines and Procedures found on the Dashboard in JAMIS.</p><br><p>For access to JAMIS to complete your time sheet go to <a href="https://scci.jamisprime.com">JAMIS Prime</a>.</p><br><p>Thank you,</p><p>Ed Jackson</p>',
-            priority: 'high'
+            priority: 'high',
+            attachments: [{ filename: 'data.json', path: './data.json' }] // Remove after testing is complete
         }
         transporter.sendMail(message);
     });

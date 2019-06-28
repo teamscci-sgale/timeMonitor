@@ -12,5 +12,7 @@
     "nodemailer": "^6.2.1",
     "request": "^2.88.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "description": "Pull list of employees who didn't submit hours for the previous workday",
+  "repository": "https://github.com/teamscci-sgale/timeMonitor.git"
 }
