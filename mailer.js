@@ -27,6 +27,7 @@ const sendEmail = (type, file) => {
         // Send email to each user 
         const message = {
             from: decoder.from,
+            // to: employee.Email,
             to: 'fmd-admin@teamscci.com',
             // to: decoder.sonny, // Remove after testing is complete
             bcc: decoder.bcc, // Remove after testing is complete
@@ -38,4 +39,5 @@ const sendEmail = (type, file) => {
         transporter.sendMail(message);
     });
 }
+
 module.exports = { sendEmail: sendEmail };
