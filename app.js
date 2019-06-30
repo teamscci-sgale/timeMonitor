@@ -9,7 +9,7 @@ let query = 'TimeCardMonitoring2';
 if (numDay === 1) { query = 'TimeCardMonitoring3' };
 
 // Only run Monday thru Friday
-if ((numDay > 0 || numDay < 6) && (hours > 8 || hours < 13)) {
+if ((numDay > 0 && numDay < 6) && (hours > 8 && hours < 13)) {
     helpers.getData(query, (error, data) => {
         helpers.filterData(data, (error, data) => {
             helpers.prepData(data, timeZone[hours - 9]);
