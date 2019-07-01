@@ -19,8 +19,7 @@ const filterData = (data, callback) => {
         employee.EmployeeName = ((employee.EmployeeName).split(', ')[1]).split(' ')[0] + ' ' + (employee.EmployeeName).split(', ')[0];
         employee.ReportsToName = ((employee.ReportsToName).split(', ')[1]).split(' ')[0] + ' ' + (employee.ReportsToName).split(', ')[0];
 
-        if (exempt.indexOf(employee.EmployeeID) === -1) { return true };
-        return false;
+        return exempt.indexOf(employee.EmployeeID) === -1 ? true : false;
     }));
 };
 

@@ -19,8 +19,8 @@ const emailSupervisor = () => {
     supervisors.forEach(({ supervisor }) => {
         const members = [];
 
-        data.filter(employee => { 
-            if (employee.ReportsToID === supervisor.ReportsToID) { members.push(employee.EmployeeName) }
+        data.filter(({ ReportsToID, EmployeeName }) => { 
+            if (ReportsToID === supervisor.ReportsToID) { members.push(EmployeeName) }
         });
 
         teams.push({
