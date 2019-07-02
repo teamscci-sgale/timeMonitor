@@ -7,7 +7,7 @@ const supervisors = require('./supervisors');
 // Get employees with zero hours for previous workday
 const getData = (query, callback) => {
     request({ url: decoder.url + query, json: true }, (error, { body }) => {
-        callback(undefined, body.value.filter(result => result.YesterdaysHours === '0.00'));
+        callback(undefined, body.value.filter(({ YesterdaysHours }) => YesterdaysHours === '0.00'));
     });
 };
 
@@ -25,7 +25,7 @@ const filterData = (data, callback) => {
 
 // Data is saved to data.json specific to the time zone passed in, then the type--employee or supervisor--is passed to sendEmail() 
 const prepData = (data, timeZone) => {
-    fs.writeFileSync('./data.json', JSON.stringify(data.filter(employee => employee.Calendar === timeZone)));
+    fs.writeFileSync('./data.json', JSON.stringify(data.filter(({ Calendar }) => Calendar === timeZone)));
     mailer.sendEmail('employee', 'data.json');
     supervisors.emailSupervisor();
 };
